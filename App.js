@@ -14,16 +14,22 @@ export default function App() {
         if (data.type === 'success') {
           if (Platform.OS === 'android') {
               const FLAG_GRANT_READ_URI_PERMISSION = 1;
-              IntentLauncher.startActivityAsync('android.intent.action.SEND', {
+              var res = IntentLauncher.startActivityAsync('android.intent.action.SEND', {
                 type: 'application/pdf',
                 flags: FLAG_GRANT_READ_URI_PERMISSION,
                 extra: {"src":"pkb","dbId":"10101010"},
                 data: data.uri,
                 packageName: 'id.astra.zebraprint',
                 className: 'id.astra.zebraprint.MainActivity',
+              }).then((res) => {
+                if(res.resultCode ==  IntentLauncher.ResultCode.Success){
+                  ToastAndroid.show('Complete', ToastAndroid.SHORT);
+                }else{                    
+                  ToastAndroid.show('Cancelled', ToastAndroid.SHORT);
+                }           
               }).catch((e) => {
                 ToastAndroid.show('Application not found!', ToastAndroid.SHORT);
-              });
+              })
           }
         }
       })
